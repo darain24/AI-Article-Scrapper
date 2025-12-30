@@ -4,8 +4,12 @@
   "description": "BeyondChats Article Management System",
   "private": true,
   "scripts": {
-    "build:vercel": "cd backend && npm install && cd ../frontend && npm install && cd ../backend && npx prisma generate && cd ../frontend && npm run build",
-    "install:all": "cd backend && npm install && cd ../frontend && npm install"
+    "build:vercel": "npm run install:backend && npm run install:frontend && npm run generate:prisma && npm run build:frontend",
+    "install:backend": "cd backend && npm install",
+    "install:frontend": "cd frontend && npm install",
+    "generate:prisma": "cd backend && npx prisma generate",
+    "build:frontend": "cd frontend && npm run build",
+    "install:all": "npm run install:backend && npm run install:frontend"
   },
   "keywords": [],
   "author": "",

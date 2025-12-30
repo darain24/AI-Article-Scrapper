@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "buildCommand": "cd frontend && npm install && npm run build && cd ../backend && npm install && npx prisma generate",
+  "buildCommand": "cd backend && npm ci && npx prisma generate && cd ../frontend && npm ci && npm run build",
   "outputDirectory": "frontend/dist",
-  "installCommand": "npm install",
+  "installCommand": "echo 'Dependencies installed in buildCommand'",
   "framework": null,
   "rewrites": [
     {

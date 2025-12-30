@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "prebuild": "cd ../backend && (npm install || true) && npx prisma generate",
+    "vercel-build": "cd ../backend && npm install && npx prisma generate && cd ../frontend && npm install && npm run build",
     "preview": "vite preview"
   },
   "dependencies": {

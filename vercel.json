@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "buildCommand": "npm run build:vercel",
+  "buildCommand": "cd backend && npm install && cd ../frontend && npm install && cd ../backend && npx prisma generate && cd ../frontend && npm run build",
   "outputDirectory": "frontend/dist",
-  "installCommand": "npm install",
+  "installCommand": "echo 'Skipping root install - handled in buildCommand'",
   "framework": "vite",
   "rewrites": [
     {

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "buildCommand": "cd backend && npm ci && npx prisma generate && cd ../frontend && npm ci && npm run build",
+  "buildCommand": "npm run build:vercel",
   "outputDirectory": "frontend/dist",
-  "installCommand": "echo 'Dependencies installed in buildCommand'",
+  "installCommand": "npm install",
   "framework": null,
   "rewrites": [
     {
@@ -20,8 +20,5 @@
       "memory": 1024,
       "maxDuration": 30
     }
-  },
-  "env": {
-    "NODE_ENV": "production"
   }
 }

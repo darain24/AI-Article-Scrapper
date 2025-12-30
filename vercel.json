@@ -22,7 +22,5 @@
       "src": "/(.*)",
       "dest": "frontend/$1"
     }
-  ],
-  "buildCommand": "cd backend && npm install && cd ../frontend && npm install && cd ../backend && npx prisma generate && cd ../frontend && npm run build",
-  "outputDirectory": "frontend/dist"
+  ]
 }

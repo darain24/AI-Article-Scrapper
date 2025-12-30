@@ -3,6 +3,12 @@
   "version": "1.0.0",
   "description": "React frontend for BeyondChats article management",
   "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "prebuild": "cd ../backend && npm install && npx prisma generate",
+    "preview": "vite preview"
+  },
   "dependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -12,11 +18,5 @@
   "devDependencies": {
     "@vitejs/plugin-react": "^4.2.1",
     "vite": "^5.0.8"
-  },
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
   }
 }
-

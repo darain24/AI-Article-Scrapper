@@ -1,24 +1,27 @@
 {
   "version": 2,
-  "buildCommand": "cd backend && npm install && cd ../frontend && npm install && cd ../backend && npx prisma generate && cd ../frontend && npm run build",
-  "outputDirectory": "frontend/dist",
-  "installCommand": "echo 'Skipping root install - handled in buildCommand'",
-  "framework": "vite",
-  "rewrites": [
+  "builds": [
     {
-      "source": "/api/(.*)",
-      "destination": "/api/index.js"
+      "src": "api/index.js",
+      "use": "@vercel/node"
     },
     {
-      "source": "/(.*)",
-      "destination": "/index.html"
+      "src": "frontend/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist",
+        "buildCommand": "cd ../../backend && npm install && npx prisma generate && cd ../frontend && npm install && npm run build"
+      }
     }
   ],
-  "functions": {
-    "api/index.js": {
-      "runtime": "nodejs18.x",
-      "memory": 1024,
-      "maxDuration": 30
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "api/index.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "frontend/$1"
     }
-  }
+  ]
 }

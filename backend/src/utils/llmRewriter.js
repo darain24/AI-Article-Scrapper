@@ -59,13 +59,53 @@ Instructions:
 
 Rewritten Article:`;
 
+      // First, try to list available models dynamically
+      // This ensures we use models that are actually available with the API key
+      let availableModels = [];
+      try {
+        console.log('   Checking available models...');
+        const listUrl = `${this.baseUrl}/models?key=${this.apiKey}`;
+        const listResponse = await axios.get(listUrl, { timeout: 10000 });
+        if (listResponse.data?.models) {
+          // Filter for text generation models (exclude embeddings, etc.)
+          availableModels = listResponse.data.models
+            .filter(m => {
+              const name = m.name?.replace('models/', '') || m.name || '';
+              return name.includes('gemini') && 
+                     !name.includes('embedding') && 
+                     !name.includes('image') &&
+                     !name.includes('tts') &&
+                     !name.includes('robotics');
+            })
+            .map(m => m.name?.replace('models/', '') || m.name)
+            .sort((a, b) => {
+              // Prioritize: flash > pro > latest > preview
+              const aPriority = a.includes('flash') ? 1 : a.includes('pro') ? 2 : 3;
+              const bPriority = b.includes('flash') ? 1 : b.includes('pro') ? 2 : 3;
+              return aPriority - bPriority;
+            });
+          
+          if (availableModels.length > 0) {
+            console.log(`   Found ${availableModels.length} available model(s)`);
+          }
+        }
+      } catch (listError) {
+        console.log('   Could not list models, using fallback names...');
+      }
+
       // Try different models in order of preference using v1beta endpoint
-      // v1beta endpoint supports: gemini-1.5-flash, gemini-1.5-pro, gemini-pro
-      const modelNames = [
-        'gemini-1.5-flash',      // Fastest, recommended for most use cases
-        'gemini-1.5-pro',        // More capable, better quality
-        'gemini-pro'             // Original model (fallback)
-      ];
+      // Prioritize newer models (2.5, 2.0) over older ones
+      const modelNames = availableModels.length > 0 
+        ? availableModels
+        : [
+            'gemini-2.5-flash',        // Latest and fastest
+            'gemini-2.5-pro',          // Latest and most capable
+            'gemini-2.0-flash',        // Previous generation
+            'gemini-1.5-flash',        // Older but stable
+            'gemini-1.5-pro',
+            'gemini-pro-latest',
+            'gemini-pro'
+          ];
       
       let lastError = null;
       
@@ -123,6 +163,25 @@ Rewritten Article:`;
         } catch (error) {
           lastError = error;
           
+          // Log detailed error information
+          if (error.response) {
+            console.error(`   ✗ Model ${modelName} failed:`);
+            console.error(`      Status: ${error.response.status} ${error.response.statusText}`);
+            if (error.response.data) {
+              const errorData = error.response.data;
+              if (errorData.error) {
+                console.error(`      Error: ${errorData.error.message || JSON.stringify(errorData.error)}`);
+              } else {
+                console.error(`      Response: ${JSON.stringify(errorData, null, 2)}`);
+              }
+            }
+          } else if (error.request) {
+            console.error(`   ✗ Model ${modelName} failed: No response received`);
+            console.error(`      URL: ${error.config?.url?.replace(this.apiKey, '***')}`);
+          } else {
+            console.error(`   ✗ Model ${modelName} failed: ${error.message}`);
+          }
+          
           // If it's a 404/model not found error, try next model
           if (error.response?.status === 404 || 
               error.message.includes('not found') || 
@@ -135,25 +194,7 @@ Rewritten Article:`;
             // API key issues - don't try other models
             throw new Error(`API authentication failed. Please check your GEMINI_API_KEY. Status: ${error.response.status}`);
           } else {
-            // Other errors - log and try next model
-            console.error(`   Error with model ${modelName}: ${error.message}`);
-            if (error.response) {
-              console.error(`   Status: ${error.response.status}`);
-              console.error(`   Status Text: ${error.response.statusText}`);
-              if (error.response.data) {
-                console.error(`   Error Details: ${JSON.stringify(error.response.data, null, 2)}`);
-              }
-            } else if (error.request) {
-              console.error(`   No response received. Request URL: ${error.config?.url?.replace(this.apiKey, '***')}`);
-            }
-            // For 404, try next model
-            if (error.response?.status === 404) {
-              continue;
-            }
-            // For auth errors, don't try other models
-            if (error.response?.status === 401 || error.response?.status === 403) {
-              throw new Error(`API authentication failed. Please check your GEMINI_API_KEY. Status: ${error.response.status}`);
-            }
+            // For other errors, try next model
             continue;
           }
         }

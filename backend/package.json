@@ -4,11 +4,16 @@
   "description": "Backend API for BeyondChats article management",
   "main": "src/app.js",
   "type": "module",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "scripts": {
     "dev": "node --watch src/app.js",
     "start": "node src/app.js",
+    "postinstall": "prisma generate",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
+    "prisma:migrate:deploy": "prisma migrate deploy",
     "prisma:studio": "prisma studio",
     "scrape": "node src/scripts/scrapeArticles.js",
     "enhance": "node src/scripts/enhanceArticles.js"
@@ -29,4 +34,3 @@
     "prisma": "^5.7.1"
   }
 }
-

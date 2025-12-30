@@ -37,3 +37,7 @@ Thumbs.db
 # Prisma
 backend/prisma/migrations/
 
+# Vercel
+.vercel
+.vercelignore
+

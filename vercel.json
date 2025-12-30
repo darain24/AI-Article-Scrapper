@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "bash build.sh",
+  "buildCommand": "cd backend && npm install && cd ../frontend && npm install && cd ../backend && DATABASE_URL=postgresql://dummy:dummy@localhost:5432/dummy npx prisma generate && cd ../frontend && npm run build",
   "outputDirectory": "frontend/dist",
   "installCommand": "echo 'Dependencies installed in buildCommand'",
   "framework": null,

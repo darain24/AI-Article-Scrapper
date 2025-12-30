@@ -1,0 +1,29 @@
+// Prisma schema for article management
+// Supports storing both original and updated versions of articles
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Article {
+  id          String   @id @default(cuid())
+  title       String
+  content     String   @db.Text
+  url         String   @unique
+  publishedAt DateTime
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Phase 2: Enhanced version
+  updatedContent String? @db.Text
+  references     Json?   // Array of reference URLs
+  
+  @@index([publishedAt])
+  @@index([createdAt])
+}
+

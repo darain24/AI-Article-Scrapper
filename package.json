@@ -4,12 +4,13 @@
   "description": "BeyondChats Article Management System",
   "private": true,
   "scripts": {
-    "build:vercel": "npm run install:backend && npm run install:frontend && npm run generate:prisma && npm run build:frontend",
-    "install:backend": "cd backend && npm install",
-    "install:frontend": "cd frontend && npm install",
-    "generate:prisma": "cd backend && npx prisma generate || echo 'Prisma generate failed but continuing'",
+    "build:vercel": "npm run install:all && npm run generate:prisma && npm run build:frontend",
+    "install:all": "npm run install:backend && npm run install:frontend",
+    "install:backend": "cd backend && npm install --no-audit --no-fund",
+    "install:frontend": "cd frontend && npm install --no-audit --no-fund",
+    "generate:prisma": "cd backend && DATABASE_URL=${DATABASE_URL:-postgresql://dummy:dummy@localhost:5432/dummy} npx prisma generate",
     "build:frontend": "cd frontend && npm run build",
-    "install:all": "npm run install:backend && npm run install:frontend"
+    "postinstall": "echo 'Root install complete'"
   },
   "keywords": [],
   "author": "",

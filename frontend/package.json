@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "prebuild": "cd ../backend && npm install && npx prisma generate",
+    "prebuild": "cd ../backend && (npm install || true) && npx prisma generate",
     "preview": "vite preview"
   },
   "dependencies": {

@@ -22,13 +22,11 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Request logging (production-safe)
-if (process.env.NODE_ENV === 'development') {
-  app.use((req, res, next) => {
-    console.log(`${req.method} ${req.path}`);
-    next();
-  });
-}
+// Request logging (always log in serverless for debugging)
+app.use((req, res, next) => {
+  console.log(`[Express] ${req.method} ${req.url} | Path: ${req.path}`);
+  next();
+});
 
 // Health check endpoint (available at root and /health)
 app.get('/health', (req, res) => {

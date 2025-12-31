@@ -37,6 +37,17 @@ app.get('/', (req, res) => {
   res.json({ status: 'ok', message: 'BeyondChats API', timestamp: new Date().toISOString() });
 });
 
+// Test endpoint to verify routing
+app.get('/api/test', (req, res) => {
+  res.json({ 
+    status: 'ok', 
+    message: 'API is working',
+    path: req.path,
+    url: req.url,
+    timestamp: new Date().toISOString() 
+  });
+});
+
 // API routes
 app.use('/api/articles', articleRoutes);
 

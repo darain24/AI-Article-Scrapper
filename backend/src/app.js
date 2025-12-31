@@ -30,9 +30,13 @@ if (process.env.NODE_ENV === 'development') {
   });
 }
 
-// Health check endpoint
+// Health check endpoint (available at root and /health)
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
+app.get('/', (req, res) => {
+  res.json({ status: 'ok', message: 'BeyondChats API', timestamp: new Date().toISOString() });
 });
 
 // API routes

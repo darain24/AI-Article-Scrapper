@@ -1,8 +1,10 @@
 // Vercel serverless function entry point
-// This file exports the Express app for Vercel's serverless functions
+// This file exports a handler function for Vercel's serverless functions
 
 import app from '../backend/src/app.js';
 
-// Export as Vercel serverless function
-// Vercel will automatically handle the Express app
-export default app;
+// Export handler function for Vercel
+// Vercel expects a function that receives (req, res)
+export default function handler(req, res) {
+  return app(req, res);
+}
